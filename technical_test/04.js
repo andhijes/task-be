@@ -25,7 +25,7 @@ function anagrams(strList = []) {
     let temporaryAnagram = [];
     
     for (let i in strList) {
-        const str = strList[i].replace(/[^\w]/g, '').toLowerCase();
+        const str = strList[i].split(' ').join('').toLowerCase();
         const sortedStr = sortedString(str)
         temporaryAnagram = anagramMap.get(sortedStr) || [];
         temporaryAnagram.push(strList[i])
