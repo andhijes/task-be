@@ -20,3 +20,5 @@ npm start
 ## DEMO API
 [Simple API using Omdb API with Express Js](https://task-be.vercel.app/omdb/search?title=iron)
 
+### Technical Test (Additional)
+For technical test answer can be found in technical_test folder
