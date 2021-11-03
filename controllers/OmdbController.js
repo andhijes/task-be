@@ -1,42 +1,61 @@
 require('dotenv').config()
-const request = require('request');
-const API_KEY = process.env.API_KEY;
-const URL_PATH = `http://www.omdbapi.com/?apikey=${API_KEY}`;
+const BaseResponse = require('../helpers/BaseResponse');
+const { isJsonString } = require('../helpers/JsonHelper');
+const { getQueryString } = require('../helpers/QueryHelper');
+const { getCallApi } = require('../services/Resource');
 
-const callApi = (url) => {
-		return new Promise((resolve, reject) => {
-			request(url, { timeout: 3000, method: 'GET' }, (err, res, body) => {
-			  if (err) {
-                  reject(err)
-              }
-			  resolve(body)
-			});
-		})
-	}
+const detail = async(req, res) => {
+    try {
+        const { id } = req.params;
+        const query = getQueryString({
+            i: id
+        });
+        const options = {
+            params: query
+        }
+
+        const result = await getCallApi(options);
+        const data = isJsonString(result) && JSON.parse(result) || {};
+
+        if (data.Error){
+            throw new Error(data.Error);
+        }
+        return res.json(BaseResponse.successResponse(data));
+    } catch (error) {
+        console.log(error)
+        return res.json(BaseResponse.errorResponse(error))
+    }
+}
+
+const search = async(req, res) => {
+    try {
+        const { title, year, type, page } = req.query;
+        const query = getQueryString({
+            s: title,
+            y: year,
+            type,
+            page
+        });
+
+        const options = {
+            params: query
+        }
+
+        const result = await getCallApi(options);
+        const data = isJsonString(result) && JSON.parse(result) || {};
+        
+        if (data.Error) {
+            throw new Error(data.Error);
+        }
+        
+        return res.json(BaseResponse.successResponse(data.Search));
+    } catch (error) {
+        console.log(error)
+        return res.json(BaseResponse.errorResponse(error))
+    }
+}
 
 module.exports = {
-    detail: async(req, res) => {
-        try {
-            const { id } = req.params;
-            console.log(`${URL_PATH}&i=${id}`)
-
-            return res.json(JSON.parse(result));
-        } catch (error) {
-            console.log({error})
-            
-            return error
-        }
-    },
-    search: async(req, res) => {
-        try {
-            const { title } = req.query;
-            const result = await callApi(`${URL_PATH}&s=${title}`);
-
-            return res.json(JSON.parse(result));
-        } catch (error) {
-            console.log({error})
-            
-            return error
-        }
-    }
+    detail,
+    search
 }
