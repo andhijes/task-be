@@ -22,7 +22,6 @@ const detail = async(req, res) => {
         }
         return res.json(BaseResponse.successResponse(data));
     } catch (error) {
-        console.log(error)
         return res.json(BaseResponse.errorResponse(error))
     }
 }
@@ -50,7 +49,6 @@ const search = async(req, res) => {
         
         return res.json(BaseResponse.successResponse(data.Search));
     } catch (error) {
-        console.log(error)
         return res.json(BaseResponse.errorResponse(error))
     }
 }
