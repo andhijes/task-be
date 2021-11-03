@@ -43,9 +43,61 @@ describe('/GET Omdb Detail API', () => {
 });
 
 describe('/GET Omdb Search API', () => {
-    it('it should return success response', (done) => {
+    it('it should return success response [params: title]', (done) => {
         chai.request(server)
             .get('/omdb/search?title=iron')
+            .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('status').eql(true);
+                    res.body.should.have.property('data');
+                    res.body.should.have.not.property('error');
+                done();
+            });
+    });
+
+    it('it should return success response [params: title, year]', (done) => {
+        chai.request(server)
+            .get('/omdb/search?title=iron&year=2000')
+            .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('status').eql(true);
+                    res.body.should.have.property('data');
+                    res.body.should.have.not.property('error');
+                done();
+            });
+    });
+
+    it('it should return success response [params: title, year]', (done) => {
+        chai.request(server)
+            .get('/omdb/search?title=iron&type=series')
+            .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('status').eql(true);
+                    res.body.should.have.property('data');
+                    res.body.should.have.not.property('error');
+                done();
+            });
+    });
+
+    it('it should return success response [params: title, type, year]', (done) => {
+        chai.request(server)
+            .get('/omdb/search?title=iron&type=series&year=2000')
+            .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('status').eql(true);
+                    res.body.should.have.property('data');
+                    res.body.should.have.not.property('error');
+                done();
+            });
+    });
+
+    it('it should return success response [params: title, type, year, page]', (done) => {
+        chai.request(server)
+            .get('/omdb/search?title=iron&type=series&year=2000&page=1')
             .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
@@ -59,6 +111,17 @@ describe('/GET Omdb Search API', () => {
     it('it should return error response when no parameter', (done) => {
         chai.request(server)
             .get('/omdb/search/')
+            .end((err, res) => {
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('status').eql(false);
+                    res.body.should.have.property('error').eql('Incorrect IMDb ID.');
+                done();
+            });
+    });
+
+    it('it should return error response when no title parameter', (done) => {
+        chai.request(server)
+            .get('/omdb/search/?type=series')
             .end((err, res) => {
                     res.body.should.be.a('object');
                     res.body.should.have.property('status').eql(false);

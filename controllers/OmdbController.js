@@ -7,6 +7,9 @@ const { getCallApi } = require('../services/Resource');
 const detail = async(req, res) => {
     try {
         const { id } = req.params;
+        if (!id) {
+            throw new Error('Incorrect IMDb ID.')
+        }
         const query = getQueryString({
             i: id
         });
@@ -29,6 +32,9 @@ const detail = async(req, res) => {
 const search = async(req, res) => {
     try {
         const { title, year, type, page } = req.query;
+        if (!title) {
+            throw new Error('Incorrect IMDb ID.')
+        }
         const query = getQueryString({
             s: title,
             y: year,
